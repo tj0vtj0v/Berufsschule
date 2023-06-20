@@ -7,7 +7,6 @@ FROM (
 	HAVING AnzahlProJahr > 1
     ) AS xy;
 
-
 #Nummer 2
 SELECT SUM(preis)
 FROM (
@@ -37,3 +36,18 @@ ON v.ort_id_fk = o.ort_id
 GROUP BY v.ort_id_fk
 ORDER BY count(v.ort_id_fk) DESC
 LIMIT 4;
+
+#Nummer 5
+SELECT  o.name,
+	(SELECT count(*)
+    FROM buch b JOIN verlag v 
+    ON b.verlag_id_fk = v.verlag_id
+    WHERE erscheinungsjahr < 1980
+    AND v.ort_id_fk = o.ort_id) AS 'vor 1980',
+	(SELECT count(*)
+    FROM buch b JOIN verlag v 
+    ON b.verlag_id_fk = v.verlag_id
+    WHERE erscheinungsjahr > 1980
+    AND v.ort_id_fk = o.ort_id) AS 'nach 1980'
+FROM ort o
+GROUP BY o.name
